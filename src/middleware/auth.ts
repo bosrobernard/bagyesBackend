@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { config } from '@/config/environment';
-import { User } from '@/models/User';
+import jwt from 'jsonwebtoken'; // Changed import
+import { config } from '../config/environment';
+import { User } from '../models/User';
 import { AppError } from './errorHandler';
-import { AuthPayload } from '@/types';
+import { AuthPayload } from '../types';
 
 export const authenticate = async (
   req: Request,
@@ -25,7 +25,12 @@ export const authenticate = async (
 
     try {
       // Verify token
-      const decoded = jwt.verify(token, config.jwt.secret) as AuthPayload;
+      const secret = config.jwt.secret;
+      if (!secret) {
+        throw new AppError('JWT configuration error', 500);
+      }
+
+      const decoded = jwt.verify(token, secret) as AuthPayload;
       
       // Check if user still exists
       const user = await User.findById(decoded.userId);
@@ -42,7 +47,12 @@ export const authenticate = async (
 
       next();
     } catch (error) {
-      throw new AppError('Not authorized to access this route', 401);
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new AppError('Invalid token', 401);
+      } else if (error instanceof jwt.TokenExpiredError) {
+        throw new AppError('Token expired', 401);
+      }
+      throw error;
     }
   } catch (error) {
     next(error);

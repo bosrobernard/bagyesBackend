@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { OrderService } from '@/services/orderService';
-import { ApiResponse, CreateOrderRequest, UpdateOrderStatusRequest, PaginationQuery } from '@/types';
+import { OrderService } from '../services/orderService';
+import { ApiResponse, CreateOrderRequest, UpdateOrderStatusRequest, PaginationQuery } from '../types';
 
 export class OrderController {
   static async createOrder(

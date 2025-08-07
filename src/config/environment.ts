@@ -2,22 +2,30 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Helper function to ensure required environment variables
+function requireEnv(key: string, fallback?: string): string {
+  const value = process.env[key] || fallback;
+  if (!value) {
+    throw new Error(`Required environment variable ${key} is not set`);
+  }
+  return value;
+}
+
 export const config = {
-  port: process.env.PORT || 5000,
+  port: parseInt(process.env.PORT || '5000'),
   nodeEnv: process.env.NODE_ENV || 'development',
   
   database: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/bagyesrush',
+    uri: requireEnv('MONGODB_URI', 'mongodb://localhost:27017/bagyesrush'),
     testUri: process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/bagyesrush_test',
   },
   
   jwt: {
-    secret: process.env.JWT_SECRET as string || 'fallback_secret_key_for_development',
-    refreshSecret: process.env.JWT_REFRESH_SECRET as string || 'fallback_refresh_secret_key',
-    expire: String(process.env.JWT_EXPIRE || '7d'),
-    refreshExpire: String(process.env.JWT_REFRESH_EXPIRE || '30d'),
+    secret: requireEnv('JWT_SECRET', 'fallback_secret_key_for_development_only'),
+    refreshSecret: requireEnv('JWT_REFRESH_SECRET', 'fallback_refresh_secret_key_for_development_only'),
+    expire: process.env.JWT_EXPIRE || '7d',
+    refreshExpire: process.env.JWT_REFRESH_EXPIRE || '30d',
   },
-  
   
   email: {
     host: process.env.SMTP_HOST || 'smtp.gmail.com',

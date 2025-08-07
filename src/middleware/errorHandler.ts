@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '@/utils/logger';
-import { ApiResponse } from '@/types';
-import { isDevelopment } from '@/config/environment';
+import { logger } from '../utils/logger';
+import { ApiResponse } from '../types';
+import { isDevelopment } from '../config/environment';
 
 export class AppError extends Error {
   public statusCode: number;

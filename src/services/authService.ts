@@ -1,19 +1,30 @@
-import jwt from 'jsonwebtoken';
-import { User } from '@/models/User';
-import { config } from '@/config/environment';
-import { AppError } from '@/middleware/errorHandler';
-import { IUser, LoginRequest } from '@/types';
+import jwt, { SignOptions } from 'jsonwebtoken'; // Changed import
+import { User } from '../models/User';
+import { config } from '../config/environment';
+import { AppError } from '../middleware/errorHandler';
+import { IUser, LoginRequest } from '../types';
 
 export class AuthService {
   static generateToken(userId: string): string {
-    return jwt.sign({ userId }, config.jwt.secret, {
-      expiresIn: config.jwt.expire,
-    });
+    const secret = config.jwt.secret;
+    if (!secret) {
+      throw new AppError('JWT secret is not configured', 500);
+    }
+    
+   
+return jwt.sign({ userId }, secret, {
+  expiresIn: config.jwt.expire as SignOptions["expiresIn"],
+});
   }
 
   static generateRefreshToken(userId: string): string {
-    return jwt.sign({ userId }, config.jwt.refreshSecret, {
-      expiresIn: config.jwt.refreshExpire,
+    const refreshSecret = config.jwt.refreshSecret;
+    if (!refreshSecret) {
+      throw new AppError('JWT refresh secret is not configured', 500);
+    }
+    
+    return jwt.sign({ userId }, refreshSecret, {
+      expiresIn: config.jwt.refreshExpire as SignOptions["expiresIn"],
     });
   }
 
@@ -39,7 +50,12 @@ export class AuthService {
 
   static async refreshToken(refreshToken: string): Promise<{ token: string; refreshToken: string }> {
     try {
-      const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as { userId: string };
+      const refreshSecret = config.jwt.refreshSecret;
+      if (!refreshSecret) {
+        throw new AppError('JWT refresh secret is not configured', 500);
+      }
+
+      const decoded = jwt.verify(refreshToken, refreshSecret) as { userId: string };
       
       const user = await User.findById(decoded.userId);
       if (!user || !user.isActive) {

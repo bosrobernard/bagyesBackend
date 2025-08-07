@@ -1,4 +1,4 @@
-import { AuthPayload } from './index';
+import { AuthPayload } from '../index'
 
 declare global {
   namespace Express {
@@ -7,3 +7,5 @@ declare global {
     }
   }
 }
+
+export {};

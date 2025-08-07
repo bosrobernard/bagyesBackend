@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { UserController } from '@/controllers/userController';
-import { authenticate, authorize } from '@/middleware/auth';
-import { validate } from '@/middleware/validation';
+import { UserController } from '../controllers/userController';
+import { authenticate, authorize } from '../middleware/auth';
+import { validate } from '../middleware/validation';
 import Joi from 'joi';
 
 const router = Router();

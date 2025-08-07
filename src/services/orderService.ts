@@ -1,7 +1,7 @@
-import { Order } from '@/models/Order';
-import { AppError } from '@/middleware/errorHandler';
-import { IOrder, CreateOrderRequest, UpdateOrderStatusRequest, PaginationQuery } from '@/types';
-import { logger } from '@/utils/logger';
+import { Order } from '../models/Order';
+import { AppError } from '../middleware/errorHandler';
+import { IOrder, CreateOrderRequest, UpdateOrderStatusRequest, PaginationQuery } from '../types';
+import { logger } from '../utils/logger';
 
 export class OrderService {
   static async createOrder(orderData: CreateOrderRequest, createdBy: string): Promise<IOrder> {

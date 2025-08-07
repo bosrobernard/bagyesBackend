@@ -1,8 +1,8 @@
 
 import nodemailer from 'nodemailer';
-import { config } from '@/config/environment';
-import { logger } from '@/utils/logger';
-import { IOrder } from '@/types';
+import { config } from '../config/environment';
+import { logger } from '../utils/logger';
+import { IOrder } from '../types';
 
 class EmailService {
   private transporter: nodemailer.Transporter;

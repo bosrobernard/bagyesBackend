@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { OrderController } from '@/controllers/orderController';
-import { authenticate, authorize } from '@/middleware/auth';
-import { validate, validateQuery } from '@/middleware/validation';
-import { trackingLimiter } from '@/middleware/rateLimiter';
-import { createOrderSchema, updateOrderStatusSchema, paginationSchema } from '@/utils/validators';
+import { OrderController } from '../controllers/orderController';
+import { authenticate, authorize } from '../middleware/auth';
+import { validate, validateQuery } from '../middleware/validation';
+import { trackingLimiter } from '../middleware/rateLimiter';
+import { createOrderSchema, updateOrderStatusSchema, paginationSchema } from '../utils/validators';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from '@/services/authService';
-import { ApiResponse, LoginRequest } from '@/types';
+import { AuthService } from '../services/authService';
+import { ApiResponse, LoginRequest } from '../types';
 
 export class AuthController {
   static async login(
@@ -50,6 +50,7 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
+      // TypeScript should now recognize req.user
       res.status(200).json({
         success: true,
         message: 'Profile retrieved successfully',

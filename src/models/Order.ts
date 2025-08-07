@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { IOrder, IOrderTimeline } from '@/types';
-import { generateTrackingId } from '@/utils/generateTrackingId';
+import { IOrder, IOrderTimeline } from '../types';
+import { generateTrackingId } from '../utils/generateTrackingId';
 
 const timelineSchema = new Schema<IOrderTimeline>({
   status: {
