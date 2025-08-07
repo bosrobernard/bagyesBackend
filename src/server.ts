@@ -4,17 +4,17 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import compression from 'compression';
-import { config } from '../src/config/environment';
-import { connectDatabase } from '../src/config/database';
-import { logger } from '../src/utils/logger';
-import { errorHandler, notFound } from '../src/middleware/errorHandler';
-import { generalLimiter } from '../src/middleware/rateLimiter';
+import { config } from './config/environment';
+import { connectDatabase } from './config/database';
+import { logger } from './utils/logger';
+import { errorHandler, notFound } from './middleware/errorHandler';
+import { generalLimiter } from './middleware/rateLimiter';
 import type {} from './types/express';
 
 // Import routes
-import authRoutes from '../src/routes/authRoutes';
-import orderRoutes from '../src/routes/orderRoutes';
-import userRoutes from '../src/routes/userRoutes';
+import authRoutes from './routes/authRoutes';
+import orderRoutes from './routes/orderRoutes';
+import userRoutes from './routes/userRoutes';
 
 const app = express();
 
