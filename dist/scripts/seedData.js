@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const database_1 = require("../src/config/database");
-const User_1 = require("../src/models/User");
-const Order_1 = require("../src/models/Order");
-const logger_1 = require("../src/utils/logger");
+const database_1 = require("../config/database");
+const User_1 = require("../models/User");
+const Order_1 = require("../models/Order");
+const logger_1 = require("../utils/logger");
 const seedDatabase = async () => {
     try {
         await (0, database_1.connectDatabase)();

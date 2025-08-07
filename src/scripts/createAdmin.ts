@@ -1,6 +1,6 @@
-import { connectDatabase, disconnectDatabase } from '../src/config/database';
-import { User } from '../src/models/User';
-import { logger } from '../src/utils/logger';
+import { connectDatabase, disconnectDatabase } from '../config/database';
+import { User } from '../models/User';
+import { logger } from '../utils/logger';
 
 const createAdminUser = async () => {
   try {

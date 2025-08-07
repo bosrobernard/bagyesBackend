@@ -1,7 +1,7 @@
-import { connectDatabase, disconnectDatabase } from '../src/config/database';
-import { User } from '../src/models/User';
-import { Order } from '../src/models/Order';
-import { logger } from '../src/utils/logger';
+import { connectDatabase, disconnectDatabase } from '../config/database';
+import { User } from '../models/User';
+import { Order } from '../models/Order';
+import { logger } from '../utils/logger';
 
 const seedDatabase = async () => {
   try {
