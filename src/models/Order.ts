@@ -1,6 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import { IOrder, IOrderTimeline } from '../types';
 import { generateTrackingId } from '../utils/generateTrackingId';
+import { logger } from '../utils/logger';
+
+logger.info('Loading Order model file'); // Confirm file is loaded
 
 const timelineSchema = new Schema<IOrderTimeline>({
   status: {
@@ -104,24 +107,30 @@ const orderSchema = new Schema<IOrder>({
   timestamps: true,
 });
 
-// Generate tracking ID before saving
-orderSchema.pre('save', function(next) {
-  if (!this.trackingId) {
-    this.trackingId = generateTrackingId();
-  }
-  next();
-});
+logger.info('Registering Order schema');
 
-// Add initial timeline entry before saving
+// Combine pre('save') hooks
 orderSchema.pre('save', function(next) {
-  if (this.isNew && this.timeline.length === 0) {
-    this.timeline.push({
-      status: 'pending',
-      description: 'Order created and pending pickup',
-      timestamp: new Date(),
-    });
+  logger.info('pre(save) hook triggered for Order', { _id: this._id.toString() });
+  try {
+    if (!this.trackingId) {
+      const trackingId = generateTrackingId();
+      logger.info('Generated trackingId:', trackingId);
+      this.trackingId = trackingId;
+    }
+    if (this.isNew && this.timeline.length === 0) {
+      logger.info('Adding initial timeline entry');
+      this.timeline.push({
+        status: 'pending',
+        description: 'Order created and pending pickup',
+        timestamp: new Date(),
+      });
+    }
+    next();
+  } catch (error) {
+    logger.error('Error in pre(save) hook:', error);
+    next(error instanceof Error ? error : new Error('pre(save) hook failed'));
   }
-  next();
 });
 
 // Index for text search
@@ -132,4 +141,7 @@ orderSchema.index({
   itemDescription: 'text',
 });
 
-export const Order = mongoose.model<IOrder>('Order', orderSchema);
+const Order = mongoose.models.Order || mongoose.model<IOrder>('Order', orderSchema);
+logger.info('Order model compiled');
+
+export { Order };

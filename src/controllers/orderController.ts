@@ -1,16 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import { OrderService } from '../services/orderService';
-import { ApiResponse, CreateOrderRequest, UpdateOrderStatusRequest, PaginationQuery } from '../types';
+import { Request, Response, NextFunction } from "express";
+import { OrderService } from "../services/orderService";
+import {
+  ApiResponse,
+  CreateOrderRequest,
+  UpdateOrderStatusRequest,
+  PaginationQuery,
+} from "../types";
 
 export class OrderController {
+  
   static async createOrder(
     req: Request<{}, ApiResponse, CreateOrderRequest>,
     res: Response<ApiResponse>,
     next: NextFunction
   ): Promise<void> {
     try {
+      console.log('Request Body:', req.body);
       const order = await OrderService.createOrder(req.body, req.user!.userId);
-
       res.status(201).json({
         success: true,
         message: 'Order created successfully',
@@ -31,16 +37,16 @@ export class OrderController {
       const order = await OrderService.getOrderByTrackingId(trackingId);
 
       if (!order) {
-         res.status(404).json({
+        res.status(404).json({
           success: false,
-          message: 'Order not found',
+          message: "Order not found",
         });
         return;
       }
 
       res.status(200).json({
         success: true,
-        message: 'Order retrieved successfully',
+        message: "Order retrieved successfully",
         data: { order },
       });
     } catch (error) {
@@ -55,11 +61,15 @@ export class OrderController {
   ): Promise<void> {
     try {
       const { trackingId } = req.params;
-      const order = await OrderService.updateOrderStatus(trackingId, req.body, req.user!.userId);
+      const order = await OrderService.updateOrderStatus(
+        trackingId,
+        req.body,
+        req.user!.userId
+      );
 
       res.status(200).json({
         success: true,
-        message: 'Order status updated successfully',
+        message: "Order status updated successfully",
         data: { order },
       });
     } catch (error) {
@@ -77,7 +87,7 @@ export class OrderController {
 
       res.status(200).json({
         success: true,
-        message: 'Orders retrieved successfully',
+        message: "Orders retrieved successfully",
         data: { orders: result.orders },
         pagination: result.pagination,
       });
@@ -96,7 +106,7 @@ export class OrderController {
 
       res.status(200).json({
         success: true,
-        message: 'Orders retrieved successfully',
+        message: "Orders retrieved successfully",
         data: { orders: result.orders },
         pagination: result.pagination,
       });
@@ -115,7 +125,7 @@ export class OrderController {
 
       res.status(200).json({
         success: true,
-        message: 'Statistics retrieved successfully',
+        message: "Statistics retrieved successfully",
         data: { statistics },
       });
     } catch (error) {

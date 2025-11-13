@@ -8,10 +8,10 @@ export const loginSchema = Joi.object({
 export const createOrderSchema = Joi.object({
   senderName: Joi.string().min(2).max(100).required(),
   senderPhone: Joi.string().min(10).max(20).required(),
-  senderAddress: Joi.string().min(10).max(500).required(),
+  senderAddress: Joi.string().min(5).max(500).required(),
   receiverName: Joi.string().min(2).max(100).required(),
   receiverPhone: Joi.string().min(10).max(20).required(),
-  receiverAddress: Joi.string().min(10).max(500).required(),
+  receiverAddress: Joi.string().min(5).max(500).required(),
   itemDescription: Joi.string().min(5).max(200).required(),
   itemWeight: Joi.number().min(0).max(1000).optional(),
   itemValue: Joi.number().min(0).max(100000).optional(),

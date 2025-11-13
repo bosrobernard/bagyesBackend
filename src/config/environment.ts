@@ -12,7 +12,7 @@ function requireEnv(key: string, fallback?: string): string {
 }
 
 export const config = {
-  port: parseInt(process.env.PORT || '5000'),
+  port: parseInt(process.env.PORT || '5002'),
   nodeEnv: process.env.NODE_ENV || 'development',
   
   database: {
@@ -40,7 +40,7 @@ export const config = {
   },
   
   cors: {
-    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
   },
 } as const;
 

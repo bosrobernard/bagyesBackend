@@ -10,8 +10,6 @@ import { logger } from './utils/logger';
 import { errorHandler, notFound } from './middleware/errorHandler';
 import { generalLimiter } from './middleware/rateLimiter';
 import type {} from './types/express';
-
-// Import routes
 import authRoutes from './routes/authRoutes';
 import orderRoutes from './routes/orderRoutes';
 import userRoutes from './routes/userRoutes';
@@ -24,6 +22,13 @@ app.set('trust proxy', 1);
 // Security middleware
 app.use(helmet());
 
+// Handle OPTIONS requests explicitly
+app.options('*', cors({
+  origin: config.cors.allowedOrigins,
+  credentials: true,
+  optionsSuccessStatus: 200,
+})); // Respond to all OPTIONS requests with CORS headers
+
 // CORS configuration
 app.use(cors({
   origin: config.cors.allowedOrigins,
@@ -34,8 +39,13 @@ app.use(cors({
 // Compression middleware
 app.use(compression());
 
-// Rate limiting
-app.use(generalLimiter);
+// Rate limiting (skip for OPTIONS)
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return next(); // Skip rate-limiting for OPTIONS
+  }
+  return generalLimiter(req, res, next);
+});
 
 // Logging middleware
 if (config.nodeEnv === 'development') {
@@ -71,12 +81,9 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start server
-const startServer = async (): Promise<void> => {
+const startServer = async () => {
   try {
-    // Connect to database
     await connectDatabase();
-
-    // Start listening
     app.listen(config.port, () => {
       logger.info(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
     });
@@ -86,25 +93,20 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err: Error) => {
+// Handle unhandled promise rejections and exceptions
+process.on('unhandledRejection', (err) => {
   logger.error('Unhandled Promise Rejection:', err);
   process.exit(1);
 });
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (err: Error) => {
+process.on('uncaughtException', (err) => {
   logger.error('Uncaught Exception:', err);
   process.exit(1);
 });
-
-// Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received. Shutting down gracefully...');
   process.exit(0);
 });
 
-// Start the server
 startServer();
 
 export default app;

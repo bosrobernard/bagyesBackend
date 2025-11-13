@@ -7,7 +7,14 @@ import { loginSchema } from '../utils/validators';
 
 const router = Router();
 
-router.post('/login', authLimiter, validate(loginSchema), AuthController.login);
+// Skip authLimiter for OPTIONS requests on /login
+router.post('/login', (req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return next(); // Skip rate-limiting for OPTIONS
+  }
+  return authLimiter(req, res, next);
+}, validate(loginSchema), AuthController.login);
+
 router.post('/refresh-token', authLimiter, AuthController.refreshToken);
 router.get('/profile', authenticate, AuthController.getProfile);
 
